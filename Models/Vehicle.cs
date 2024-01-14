@@ -9,10 +9,10 @@ namespace DealerShip.Models
 		public int VehicleID { get; set; }
 
 		[Required]
-		public string VehicleModel { get; set; }
+		public int VehicleModelID { get; set; }
 
 		[Required]
-		public string VehicleMake { get; set; }
+		public int VehicleMakeID { get; set; }
 
 		[Required]
 		public string VehicleType { get; set; }
@@ -29,6 +29,8 @@ namespace DealerShip.Models
 		public DateTime VehicleProductionDate { get; set; }
 
 		public virtual ICollection<VehicleImage> VehicleImages { get; set; }
+		public virtual Make VehicleMake { get; set; }
+		public virtual Model VehicleModel { get; set; }
 
 		// Foreign key for VehicleStatus
 		public int VehicleStatusID { get; set; }
@@ -44,10 +46,10 @@ namespace DealerShip.Models
 		
 		}
 
-		public Vehicle(string model, string make, string type, decimal mileage, decimal rentPrice, decimal salePrice, DateTime productionDate) : this()
+		public Vehicle(int modelID, int makeID, string type, decimal mileage, decimal rentPrice, decimal salePrice, DateTime productionDate) : this()
 		{
-			VehicleModel = model;
-			VehicleMake = make;
+			VehicleModelID = modelID;
+			VehicleMakeID = makeID;
 			VehicleType = type;
 			VehicleMileage = mileage;
 			VehicleRentPrice = rentPrice;

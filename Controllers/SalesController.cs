@@ -40,8 +40,8 @@ namespace DealerShip.Controllers
 						Vehicle = new VehicleSaleReadDto
 						{
 							VehicleID = v.VehicleID,
-							VehicleMake = v.Vehicle.VehicleMake,
-							VehicleModel = v.Vehicle.VehicleModel,
+							VehicleMake = v.Vehicle.VehicleMake.MakeName,
+							VehicleModel = v.Vehicle.VehicleModel.ModelName,
 							VehicleSalePrice = v.Vehicle.VehicleSalePrice
 						},
 
@@ -73,8 +73,8 @@ namespace DealerShip.Controllers
 						 Vehicle = new VehicleSaleReadDto
 						 {
 							 VehicleID = v.VehicleID,
-							 VehicleMake = v.Vehicle.VehicleMake,
-							 VehicleModel = v.Vehicle.VehicleModel,
+							 VehicleMake = v.Vehicle.VehicleMake.MakeName,
+							 VehicleModel = v.Vehicle.VehicleModel.ModelName,
 							 VehicleSalePrice = v.Vehicle.VehicleSalePrice
 						 },
 
@@ -169,7 +169,7 @@ namespace DealerShip.Controllers
 			_context.Sales.Add(sale);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction("GetSale", new { id = sale.TransactionID }, sale);
+			return CreatedAtAction("GetSale", new {id= sale.TransactionID }, sale);
         }
 
         // DELETE: api/Sales/5

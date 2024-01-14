@@ -4,6 +4,7 @@ using DealerShip.Presistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DealerShip.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240114091420_updateVehicle")]
+    partial class updateVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,9 +156,6 @@ namespace DealerShip.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ModelID")
-                        .HasColumnType("int");
-
                     b.Property<int>("SalesPersonID")
                         .HasColumnType("int");
 
@@ -277,8 +277,6 @@ namespace DealerShip.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("ModelID");
-
                     b.HasIndex("SalesPersonID");
 
                     b.HasIndex("VehicleID");
@@ -291,8 +289,6 @@ namespace DealerShip.Migrations
                     b.HasBaseType("DealerShip.Models.Transaction");
 
                     b.HasIndex("CustomerID");
-
-                    b.HasIndex("ModelID");
 
                     b.HasIndex("SalesPersonID");
 
@@ -358,12 +354,6 @@ namespace DealerShip.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DealerShip.Models.Model", "Model")
-                        .WithMany()
-                        .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DealerShip.Models.SalesPerson", "SalesPerson")
                         .WithMany()
                         .HasForeignKey("SalesPersonID")
@@ -377,8 +367,6 @@ namespace DealerShip.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Model");
 
                     b.Navigation("SalesPerson");
 
@@ -393,12 +381,6 @@ namespace DealerShip.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DealerShip.Models.Model", "Model")
-                        .WithMany()
-                        .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DealerShip.Models.SalesPerson", "SalesPerson")
                         .WithMany()
                         .HasForeignKey("SalesPersonID")
@@ -412,8 +394,6 @@ namespace DealerShip.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Model");
 
                     b.Navigation("SalesPerson");
 

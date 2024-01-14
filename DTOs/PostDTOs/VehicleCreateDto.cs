@@ -2,8 +2,8 @@
 {
 	public class VehicleCreateDto
 	{
-		public string VehicleModel { get; set; }
-		public string VehicleMake { get; set; }
+		public int VehicleModelID { get; set; }
+		public int VehicleMakeID { get; set; }
 		public string VehicleType { get; set; }
 		public decimal VehicleMileage { get; set; }
 		public decimal VehicleRentPrice { get; set; }

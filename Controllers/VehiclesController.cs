@@ -31,11 +31,13 @@ namespace DealerShip.Controllers
 			var vehicles = await _context.Vehicles
 				.Include(v => v.VehicleStatus)
 				.Include(v => v.VehicleImages)
+				.Include(v => v.VehicleMake)
+				.Include(v => v.VehicleModel)
 				.Select(v => new VehicleReadDto
 				{
 					VehicleID = v.VehicleID,
-					VehicleModel = v.VehicleModel,
-					VehicleMake = v.VehicleMake,
+					VehicleModel = v.VehicleModel.ModelName,
+					VehicleMake = v.VehicleMake.MakeName,
 					VehicleType = v.VehicleType,
 					VehicleMileage = v.VehicleMileage,
 					VehicleRentPrice = v.VehicleRentPrice,
@@ -60,11 +62,13 @@ namespace DealerShip.Controllers
 			var vehicle = await _context.Vehicles
 				.Include(v => v.VehicleStatus)
 				.Include(v => v.VehicleImages)
+				.Include(v => v.VehicleMake)
+				.Include(v => v.VehicleModel)
 				.Where(v => v.VehicleID == id)
 				.Select(v => new VehicleReadDto
 				{
-					VehicleModel = v.VehicleModel,
-					VehicleMake = v.VehicleMake,
+					VehicleModel = v.VehicleModel.ModelName,
+					VehicleMake = v.VehicleMake.MakeName,
 					VehicleType = v.VehicleType,
 					VehicleMileage = v.VehicleMileage,
 					VehicleRentPrice = v.VehicleRentPrice,
@@ -105,9 +109,19 @@ namespace DealerShip.Controllers
 				vehicleState = await _context.VehicleStatuses.FirstOrDefaultAsync(v => v.StatusName == vehicleDto.VehicleStatusName);
 			}
 
+			var vehicleMake = await _context.Makes.FindAsync(vehicleDto.VehicleMakeID);
+			var vehicleModel = await _context.Models.FindAsync(vehicleDto.VehicleModelID);
+
+			if (vehicleModel == null || vehicleMake == null)
+			{
+				return BadRequest();
+			}
+
 			// Update the properties of the vehicle from the DTO
-			vehicle.VehicleModel = vehicleDto.VehicleModel;
-			vehicle.VehicleMake = vehicleDto.VehicleMake;
+			vehicle.VehicleModel = vehicleModel;
+			vehicle.VehicleMake = vehicleMake;
+			vehicle.VehicleMakeID = vehicleDto.VehicleMakeID;
+			vehicle.VehicleModelID = vehicleDto.VehicleModelID;
 			vehicle.VehicleType = vehicleDto.VehicleType;
 			vehicle.VehicleMileage = vehicleDto.VehicleMileage;
 			vehicle.VehicleRentPrice = vehicleDto.VehicleRentPrice;
@@ -148,14 +162,24 @@ namespace DealerShip.Controllers
 				_context.VehicleStatuses.Add(
 					new VehicleStatus(vehicleDto.VehicleStatusName));
 				await _context.SaveChangesAsync();
+				vehicleStatus = await _context.VehicleStatuses.FirstOrDefaultAsync(v => v.StatusName == vehicleDto.VehicleStatusName);
 			}
-			vehicleStatus = await _context.VehicleStatuses.FirstOrDefaultAsync(v => v.StatusName == vehicleDto.VehicleStatusName);
+
+			var vehicleMake = await _context.Makes.FindAsync(vehicleDto.VehicleMakeID);
+			var vehicleModel = await _context.Models.FindAsync(vehicleDto.VehicleModelID);
+
+			if (vehicleModel == null || vehicleMake == null)
+			{
+				return BadRequest();
+			}
 
 			var vehicle = new Vehicle
 			{
 				// Map the properties from the DTO to the Vehicle entity
-				VehicleModel = vehicleDto.VehicleModel,
-				VehicleMake = vehicleDto.VehicleMake,
+				VehicleModelID = vehicleDto.VehicleModelID,
+				VehicleMakeID = vehicleDto.VehicleMakeID,
+				VehicleMake = vehicleMake,
+				VehicleModel = vehicleModel,
 				VehicleType = vehicleDto.VehicleType,
 				VehicleMileage = vehicleDto.VehicleMileage,
 				VehicleRentPrice = vehicleDto.VehicleRentPrice,
@@ -170,8 +194,8 @@ namespace DealerShip.Controllers
 			// Create a VehicleReadDto for the response (you may need to load related entities)
 			var vehicleReadDto = new VehicleReadDto
 			{
-				VehicleModel = vehicleDto.VehicleModel,
-				VehicleMake = vehicleDto.VehicleMake,
+				VehicleModel = vehicle.VehicleModel.ModelName,
+				VehicleMake = vehicle.VehicleMake.MakeName,
 				VehicleType = vehicleDto.VehicleType,
 				VehicleMileage = vehicleDto.VehicleMileage,
 				VehicleRentPrice = vehicleDto.VehicleRentPrice,

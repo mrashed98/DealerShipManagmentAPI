@@ -41,8 +41,8 @@ namespace DealerShip.Controllers
                       Vehicle = new VehicleRentReadDto
                       {
                           VehicleID = v.VehicleID,
-                          VehicleMake = v.Vehicle.VehicleMake,
-                          VehicleModel = v.Vehicle.VehicleModel,
+                          VehicleMakeName = v.Vehicle.VehicleMake.MakeName,
+                          VehicleModelName = v.Vehicle.VehicleModel.ModelName,
                           VehicleRentPrice = v.Vehicle.VehicleRentPrice
                       },
                       TotalRentPrice = v.GetRentalDurationInDays() * v.Vehicle.VehicleRentPrice
@@ -72,8 +72,8 @@ namespace DealerShip.Controllers
                        Vehicle = new VehicleRentReadDto
                        {
                            VehicleID = v.VehicleID,
-                           VehicleMake = v.Vehicle.VehicleMake,
-                           VehicleModel = v.Vehicle.VehicleModel,
+                           VehicleMakeName = v.Vehicle.VehicleMake.MakeName,
+                           VehicleModelName = v.Vehicle.VehicleModel.ModelName,
                            VehicleRentPrice = v.Vehicle.VehicleRentPrice
                        },
                        TotalRentPrice = v.GetRentalDurationInDays() * v.Vehicle.VehicleRentPrice
@@ -90,7 +90,6 @@ namespace DealerShip.Controllers
         }
 
         // PUT: api/Rents/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRent(int id, RentCreateDto rentDto)
         {
@@ -101,8 +100,9 @@ namespace DealerShip.Controllers
 
 			var rentCustomer = await _context.Customers.FindAsync(rentDto.CustomerID);
 			var rentVehicle = await _context.Vehicles.FindAsync(rentDto.VehicleID);
+			var rentModel = await _context.Models.FindAsync(rentDto.ModelID);
 			var rentSalesPerson = await _context.SalesPersons.FindAsync(rentDto.SalesPersonID);
-			if (rentCustomer == null || rentVehicle == null || rentSalesPerson == null)
+			if (rentCustomer == null || rentVehicle == null || rentSalesPerson == null || rentModel == null)
 			{
 				BadRequest("Please Check the added data");
 			}
@@ -111,6 +111,8 @@ namespace DealerShip.Controllers
 				TransactionAmount = rentDto.TransactionAmount,
 				Vehicle = rentVehicle,
 				VehicleID = rentDto.VehicleID,
+				ModelID = rentDto.ModelID,
+				Model = rentModel,
 				CustomerID = rentDto.CustomerID,
 				Customer = rentCustomer,
 				SalesPersonID = rentDto.SalesPersonID,
@@ -153,8 +155,9 @@ namespace DealerShip.Controllers
 
             var rentCustomer = await _context.Customers.FindAsync(rentDto.CustomerID);
             var rentVehicle = await _context.Vehicles.FindAsync(rentDto.VehicleID);
+            var rentModel = await _context.Models.FindAsync(rentDto.ModelID);
             var rentSalesPerson = await _context.SalesPersons.FindAsync(rentDto.SalesPersonID);
-            if (rentCustomer == null || rentVehicle == null || rentSalesPerson == null)
+            if (rentCustomer == null || rentVehicle == null || rentSalesPerson == null || rentModel == null)
             {
                 BadRequest("Please Check the added data");
             }
@@ -162,7 +165,9 @@ namespace DealerShip.Controllers
             {
                 TransactionAmount = rentDto.TransactionAmount,
                 Vehicle = rentVehicle,
-                VehicleID = rentDto.VehicleID,
+                VehicleID = rentVehicle.VehicleID,
+                ModelID = rentModel.ModelID,
+                Model = rentModel,
                 CustomerID = rentDto.CustomerID,
                 Customer = rentCustomer,
                 SalesPersonID = rentDto.SalesPersonID,
@@ -174,7 +179,7 @@ namespace DealerShip.Controllers
             _context.Rents.Add(rent);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRent", new { id = rent.TransactionID }, rent);
+            return CreatedAtAction("GetRent", new {id = rent.TransactionID }, rent);
         }
 
         // DELETE: api/Rents/5

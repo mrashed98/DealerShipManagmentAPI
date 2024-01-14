@@ -10,8 +10,10 @@ namespace DealerShip.Models
 
 		[Required]
 		public int VehicleID { get; set; }
-
 		[Required]
+		public int ModelID { get; set; }
+
+        [Required]
 		public int CustomerID { get; set; }
         public int SalesPersonID { get; set; }
 
@@ -24,6 +26,10 @@ namespace DealerShip.Models
 		// Navigation properties
 		[ForeignKey("VehicleID")]
 		public virtual Vehicle? Vehicle { get; set; }
+
+		// Navigation properties
+		[ForeignKey("ModelID")]
+		public virtual Model? Model { get; set; }
 
 		[ForeignKey("CustomerID")]
 		public virtual Customer? Customer { get; set; }
